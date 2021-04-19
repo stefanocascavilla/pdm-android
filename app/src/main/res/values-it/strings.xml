@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MyFriendsHouse</string>
+    <string name="listButton">Lista Amici</string>
+    <string name="mapButton">Mappa Amici</string>
+</resources>

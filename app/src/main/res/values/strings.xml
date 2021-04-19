@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MyFriendsHouse</string>
+    <string name="listButton">Friends List</string>
+    <string name="mapButton">Friends Map</string>
 </resources>
