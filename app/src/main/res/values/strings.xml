@@ -2,4 +2,11 @@
     <string name="app_name">MyFriendsHouse</string>
     <string name="listButton">Friends List</string>
     <string name="mapButton">Friends Map</string>
+    <string name="nameText">Name:</string>
+    <string name="surnameText">Surname:</string>
+    <string name="streetText">Street:</string>
+    <string name="cityText">City:</string>
+    <string name="countryText">Country:</string>
+    <string name="addButton">Add</string>
+    <string name="exitButton">Exit</string>
 </resources>

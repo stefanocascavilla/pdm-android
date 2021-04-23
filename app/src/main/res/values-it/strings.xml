@@ -3,4 +3,11 @@
     <string name="app_name">MyFriendsHouse</string>
     <string name="listButton">Lista Amici</string>
     <string name="mapButton">Mappa Amici</string>
+    <string name="nameText">Nome:</string>
+    <string name="surnameText">Cognome:</string>
+    <string name="streetText">Via:</string>
+    <string name="cityText">Città:</string>
+    <string name="countryText">Paese:</string>
+    <string name="addButton">Aggiungi</string>
+    <string name="exitButton">Esci</string>
 </resources>
