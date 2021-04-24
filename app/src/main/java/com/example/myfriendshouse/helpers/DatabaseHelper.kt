@@ -37,4 +37,27 @@ class DatabaseHelper (var context: Context): SQLiteOpenHelper(context, DatabaseC
         val writeResult = this.databaseWriter.insert(DatabaseConstants.TABLE_NAME, null, contentValues)
         return writeResult != (0).toLong()
     }
+
+    fun listFriends (): ArrayList<Friend> {
+        val returnArray: ArrayList<Friend> = ArrayList()
+
+        val queryResult = this.databaseReader.rawQuery(DatabaseConstants.QUERY_LIST_FRIENDS, null)
+        if (queryResult.moveToFirst()) {
+            do {
+                returnArray.add(Friend(
+                    id = queryResult.getInt(queryResult.getColumnIndex(DatabaseConstants.COL_ID)),
+                    name = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_NAME)),
+                    surname = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_SURNAME)),
+                    street = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_STREET)),
+                    city = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_CITY)),
+                    country = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_COUNTRY)),
+                    longitude = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_LONGITUDE)).toDouble(),
+                    latitude = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_LATITUDE)).toDouble()
+                ))
+            } while (queryResult.moveToNext())
+        }
+        queryResult.close()
+
+        return returnArray
+    }
 }

@@ -5,10 +5,26 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 
+import com.example.myfriendshouse.adapters.FriendsListAdapter
+import com.example.myfriendshouse.dto.Friend
+import com.example.myfriendshouse.helpers.DatabaseHelper
+
+import kotlinx.android.synthetic.main.activity_friends_list.*
+
 class FriendsListActivity : AppCompatActivity() {
+    private var dbHelper: DatabaseHelper? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_friends_list)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        this.dbHelper = DatabaseHelper(this.applicationContext)
+
+        val friendsList: ArrayList<Friend>? = this.dbHelper!!.listFriends()
+        friendListView.adapter = FriendsListAdapter(this.applicationContext, friendsList!!)
     }
 
     fun onClickAdd (v: View) {
