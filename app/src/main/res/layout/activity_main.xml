@@ -21,6 +21,7 @@
         android:id="@+id/listButton"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:onClick="onClickListFriends"
         android:text="@string/listButton"
         app:layout_constraintBottom_toTopOf="@+id/mapButton"
         app:layout_constraintEnd_toEndOf="parent"
