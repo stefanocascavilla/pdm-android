@@ -18,4 +18,5 @@ object DatabaseConstants {
     const val TABLE_DROP_STATEMENT = "DROP TABLE IF EXISTS $TABLE_NAME"
 
     const val QUERY_LIST_FRIENDS = "SELECT * FROM $TABLE_NAME"
+    const val QUERY_SINGLE_FRIEND = "SELECT * FROM $TABLE_NAME WHERE"
 }

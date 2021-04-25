@@ -54,7 +54,7 @@ class FriendsAddActivity : AppCompatActivity() {
 
         val geoInformation: Array<Double>
         try {
-            geoInformation = this.getFriendGeolocationInformation(street, city, country)
+            //geoInformation = this.getFriendGeolocationInformation(street, city, country)
         } catch (e: InvalidParameterException) {
             println("The error in geolocation is $e")
             return
@@ -67,8 +67,8 @@ class FriendsAddActivity : AppCompatActivity() {
             street = street,
             city = city,
             country = country,
-            longitude = geoInformation[0],
-            latitude = geoInformation[1]
+            longitude = 5.toDouble(),
+            latitude = 56.toDouble()
         )
         if (!this.dbHelper!!.createFriend(newFriend)) {
             Toast.makeText(this@FriendsAddActivity, "Error while inserting the friend in the DB", Toast.LENGTH_LONG).show()

@@ -12,6 +12,7 @@ import com.example.myfriendshouse.helpers.DatabaseHelper
 import kotlinx.android.synthetic.main.activity_friends_list.*
 
 class FriendsListActivity : AppCompatActivity() {
+    private var friendsList: ArrayList<Friend>? = null
     private var dbHelper: DatabaseHelper? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,8 +24,8 @@ class FriendsListActivity : AppCompatActivity() {
         super.onStart()
         this.dbHelper = DatabaseHelper(this.applicationContext)
 
-        val friendsList: ArrayList<Friend>? = this.dbHelper!!.listFriends()
-        friendListView.adapter = FriendsListAdapter(this.applicationContext, friendsList!!)
+        this.friendsList = this.dbHelper!!.listFriends()
+        friendListView.adapter = FriendsListAdapter(this.applicationContext, this.friendsList!!)
     }
 
     fun onClickAdd (v: View) {

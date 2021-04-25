@@ -38,6 +38,32 @@ class DatabaseHelper (var context: Context): SQLiteOpenHelper(context, DatabaseC
         return writeResult != (0).toLong()
     }
 
+    fun deleteFriend (friendId: Int): Boolean {
+        val deleteResult = this.databaseWriter.delete(DatabaseConstants.TABLE_NAME, "id = $friendId", null)
+        return deleteResult == 1
+    }
+
+    fun getFriend (friendId: Int): Friend {
+        var friend: Friend? = null
+
+        val queryResult = this.databaseReader.rawQuery("${DatabaseConstants.QUERY_SINGLE_FRIEND} id = $friendId", null)
+        if (queryResult.moveToFirst()) {
+            friend = Friend(
+                id = queryResult.getInt(queryResult.getColumnIndex(DatabaseConstants.COL_ID)),
+                name = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_NAME)),
+                surname = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_SURNAME)),
+                street = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_STREET)),
+                city = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_CITY)),
+                country = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_COUNTRY)),
+                longitude = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_LONGITUDE)).toDouble(),
+                latitude = queryResult.getString(queryResult.getColumnIndex(DatabaseConstants.COL_LATITUDE)).toDouble()
+            )
+        }
+        queryResult.close()
+
+        return friend!!
+    }
+
     fun listFriends (): ArrayList<Friend> {
         val returnArray: ArrayList<Friend> = ArrayList()
 
