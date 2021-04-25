@@ -5,10 +5,14 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 
+import android.location.Geocoder
+import android.location.Address
+
 import com.example.myfriendshouse.dto.Friend
 import com.example.myfriendshouse.helpers.DatabaseHelper
 
 import kotlinx.android.synthetic.main.activity_friends_add.*
+import java.lang.Exception
 
 import java.security.InvalidParameterException
 
@@ -26,7 +30,19 @@ class FriendsAddActivity : AppCompatActivity() {
     }
 
     private fun getFriendGeolocationInformation (street: String, city: String, country: String): Array<Double> {
-        TODO("Using Google API to get long/lat from street, city, country")
+        val geocoderResult: MutableList<Address>
+        try {
+            val geocoder = Geocoder(this.applicationContext)
+            geocoderResult = geocoder.getFromLocationName("$street, $city, $country", 1)
+        } catch (e: Exception) {
+            throw InvalidParameterException("$e")
+        }
+
+        if (geocoderResult.size == 0) {
+            throw InvalidParameterException("No address returned")
+        }
+
+        return arrayOf(geocoderResult[0].longitude, geocoderResult[0].latitude)
     }
 
     fun onAddFriend (v: View) {
@@ -36,11 +52,11 @@ class FriendsAddActivity : AppCompatActivity() {
         val city = cityEditText.text.toString()
         val country = countryEditText.text.toString()
 
-        var geoInformation: Array<Double>? = null
+        val geoInformation: Array<Double>
         try {
             geoInformation = this.getFriendGeolocationInformation(street, city, country)
         } catch (e: InvalidParameterException) {
-            Toast.makeText(this@FriendsAddActivity, "The position parameters are not valid", Toast.LENGTH_LONG).show()
+            println("The error in geolocation is $e")
             return
         }
 
@@ -54,8 +70,9 @@ class FriendsAddActivity : AppCompatActivity() {
             longitude = geoInformation[0],
             latitude = geoInformation[1]
         )
-        if (!this.dbHelper?.createFriend(newFriend)!!) {
+        if (!this.dbHelper!!.createFriend(newFriend)) {
             Toast.makeText(this@FriendsAddActivity, "Error while inserting the friend in the DB", Toast.LENGTH_LONG).show()
         }
+        this.finish()
     }
 }
