@@ -39,7 +39,6 @@ class FriendsListAdapter(private val context: Context, private val data: ArrayLi
         newView?.findViewById<TextView>(R.id.userAddress)?.text = "${currentData.street} - ${currentData.city} - ${currentData.country}"
 
         newView?.findViewById<ImageView>(R.id.userIcon)?.setImageResource(R.mipmap.user_icon)
-        newView?.findViewById<ImageView>(R.id.modifyIcon)?.setImageResource(R.mipmap.edit_icon_foreground)
         newView?.findViewById<ImageView>(R.id.deleteIcon)?.setImageResource(R.mipmap.delete_icon_foreground)
 
         newView?.findViewById<ImageView>(R.id.deleteIcon)?.setOnClickListener(DeleteClickListener(this.context, currentData.id, this, this.data))
