@@ -9,4 +9,5 @@
     <string name="countryText">Country:</string>
     <string name="addButton">Add</string>
     <string name="exitButton">Exit</string>
+    <string name="title_activity_friends_map">Map</string>
 </resources>

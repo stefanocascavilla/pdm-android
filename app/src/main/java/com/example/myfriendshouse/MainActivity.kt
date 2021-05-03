@@ -14,4 +14,8 @@ class MainActivity : AppCompatActivity() {
     fun onClickListFriends (v: View) {
         this.startActivity(Intent(this@MainActivity, FriendsListActivity::class.java))
     }
+
+    fun onClickMapFriends (v: View) {
+        this.startActivity(Intent(this@MainActivity, FriendsMapActivity::class.java))
+    }
 }
