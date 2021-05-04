@@ -30,9 +30,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity
-            android:name=".FriendsMapActivity"
-            android:label="@string/title_activity_friends_map"></activity>
+        <activity android:name=".FriendsMapActivity" />
         <activity android:name=".FriendsAddActivity" />
         <activity android:name=".FriendsListActivity" />
         <activity android:name=".MainActivity">

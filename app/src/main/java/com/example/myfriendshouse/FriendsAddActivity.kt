@@ -14,8 +14,8 @@ import kotlinx.android.synthetic.main.activity_friends_add.*
 import java.security.InvalidParameterException
 
 class FriendsAddActivity : AppCompatActivity() {
-    private var dbHelper: DatabaseHelper? = null
-    private var geoLocationHelper: GeoLocationHelper? = null
+    private lateinit var dbHelper: DatabaseHelper
+    private lateinit var geoLocationHelper: GeoLocationHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +37,7 @@ class FriendsAddActivity : AppCompatActivity() {
 
         val geoInformation: Array<Double>
         try {
-            geoInformation = this.geoLocationHelper!!.getFriendGeolocationInformation(street, city, country)
+            geoInformation = this.geoLocationHelper.getFriendGeolocationInformation(street, city, country)
         } catch (e: InvalidParameterException) {
             println("The error in geolocation is $e")
             return
@@ -53,7 +53,7 @@ class FriendsAddActivity : AppCompatActivity() {
             longitude = geoInformation[0],
             latitude = geoInformation[1]
         )
-        if (!this.dbHelper!!.createFriend(newFriend)) {
+        if (!this.dbHelper.createFriend(newFriend)) {
             Toast.makeText(this@FriendsAddActivity, "Error while inserting the friend in the DB", Toast.LENGTH_LONG).show()
         }
         this.finish()

@@ -6,7 +6,7 @@ import android.location.Geocoder
 import java.lang.Exception
 import java.security.InvalidParameterException
 
-class GeoLocationHelper (val context: Context) {
+class GeoLocationHelper (private val context: Context) {
     fun getFriendGeolocationInformation (street: String, city: String, country: String): Array<Double> {
         val geocoderResult: MutableList<Address>
         try {

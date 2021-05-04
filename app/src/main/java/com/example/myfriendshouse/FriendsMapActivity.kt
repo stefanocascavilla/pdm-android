@@ -1,11 +1,17 @@
 package com.example.myfriendshouse
 
-import androidx.appcompat.app.AppCompatActivity
+import android.Manifest
+import android.content.pm.PackageManager
+import android.content.pm.PermissionInfo
+import android.location.Location
+import android.os.Build
 import android.os.Bundle
-
+import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import com.example.myfriendshouse.dto.Friend
 import com.example.myfriendshouse.helpers.DatabaseHelper
-
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -46,10 +52,46 @@ class FriendsMapActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this, arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                PermissionInfo.PROTECTION_DANGEROUS
+            )
+            this.finish()
+        }
+        mMap.isMyLocationEnabled = true
+
         for (friendItem in this.friendsList) {
-            mMap.addMarker(MarkerOptions().position(LatLng(friendItem.latitude, friendItem.longitude)).title("${friendItem.name} ${friendItem.surname}"))
+            mMap.addMarker(
+                MarkerOptions().position(
+                    LatLng(
+                        friendItem.latitude,
+                        friendItem.longitude
+                    )
+                ).title("${friendItem.name} ${friendItem.surname}")
+            )
         }
 
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+            mMap.moveCamera(
+                CameraUpdateFactory.newLatLng(
+                    LatLng(
+                        location!!.latitude,
+                        location.longitude
+                    )
+                )
+            )
+        }
     }
 }
