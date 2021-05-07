@@ -12,6 +12,7 @@ import com.example.myfriendshouse.helpers.GeoLocationHelper
 import kotlinx.android.synthetic.main.activity_friends_add.*
 
 import java.security.InvalidParameterException
+import kotlin.concurrent.thread
 
 class FriendsAddActivity : AppCompatActivity() {
     private lateinit var dbHelper: DatabaseHelper
@@ -35,27 +36,31 @@ class FriendsAddActivity : AppCompatActivity() {
         val city = cityEditText.text.toString()
         val country = countryEditText.text.toString()
 
-        val geoInformation: Array<Double>
-        try {
-            geoInformation = this.geoLocationHelper.getFriendGeolocationInformation(street, city, country)
-        } catch (e: InvalidParameterException) {
-            println("The error in geolocation is $e")
-            return
-        }
+        thread(start = true) {
+            val geoInformation: Array<Double>
+            try {
+                geoInformation = this.geoLocationHelper.getFriendGeolocationInformation(street, city, country)
+            } catch (e: InvalidParameterException) {
+                this.runOnUiThread { Toast.makeText(this@FriendsAddActivity, "Error while retrieving geolocation info", Toast.LENGTH_LONG).show() }
+                return@thread
+            }
 
-        val newFriend = Friend(
-            id = -1,
-            name = name,
-            surname = surname,
-            street = street,
-            city = city,
-            country = country,
-            longitude = geoInformation[0],
-            latitude = geoInformation[1]
-        )
-        if (!this.dbHelper.createFriend(newFriend)) {
-            Toast.makeText(this@FriendsAddActivity, "Error while inserting the friend in the DB", Toast.LENGTH_LONG).show()
+            this.runOnUiThread {
+                val newFriend = Friend(
+                        id = -1,
+                        name = name,
+                        surname = surname,
+                        street = street,
+                        city = city,
+                        country = country,
+                        longitude = geoInformation[0],
+                        latitude = geoInformation[1]
+                )
+                if (!this.dbHelper.createFriend(newFriend)) {
+                    Toast.makeText(this@FriendsAddActivity, "Error while inserting the friend in the DB", Toast.LENGTH_LONG).show()
+                }
+                this.finish()
+            }
         }
-        this.finish()
     }
 }
