@@ -3,23 +3,24 @@ package com.example.myfriendshouse
 import android.Manifest
 import android.content.pm.PackageManager
 import android.content.pm.PermissionInfo
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
+
 import androidx.annotation.RequiresApi
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+
 import com.example.myfriendshouse.dto.Friend
+import com.example.myfriendshouse.helpers.AndroidInternetActivity
 import com.example.myfriendshouse.helpers.DatabaseHelper
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.CameraUpdateFactory
+
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 
-class FriendsMapActivity : AppCompatActivity(), OnMapReadyCallback {
+class FriendsMapActivity : AndroidInternetActivity(), OnMapReadyCallback {
     private lateinit var mMap: GoogleMap
     private lateinit var dbHelper: DatabaseHelper
 
@@ -33,10 +34,15 @@ class FriendsMapActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onStart() {
         super.onStart()
-
         this.dbHelper = DatabaseHelper(this.applicationContext)
+
+        if (!this.checkInternetConnectivity()) {
+            Toast.makeText(this@FriendsMapActivity, "You need to switch internet connectivity on", Toast.LENGTH_LONG).show()
+            this.finish()
+        }
         this.friendsList = this.dbHelper.listFriends()
     }
 
@@ -49,6 +55,7 @@ class FriendsMapActivity : AppCompatActivity(), OnMapReadyCallback {
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
@@ -68,30 +75,19 @@ class FriendsMapActivity : AppCompatActivity(), OnMapReadyCallback {
                 PermissionInfo.PROTECTION_DANGEROUS
             )
             this.finish()
-        }
-        mMap.isMyLocationEnabled = true
+        } else {
+            mMap.isMyLocationEnabled = true
 
-        for (friendItem in this.friendsList) {
-            mMap.addMarker(
-                MarkerOptions().position(
-                    LatLng(
-                        friendItem.latitude,
-                        friendItem.longitude
-                    )
-                ).title("${friendItem.name} ${friendItem.surname}")
-            )
-        }
-
-        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
-            mMap.moveCamera(
-                CameraUpdateFactory.newLatLng(
-                    LatLng(
-                        location!!.latitude,
-                        location.longitude
-                    )
+            for (friendItem in this.friendsList) {
+                mMap.addMarker(
+                    MarkerOptions().position(
+                        LatLng(
+                            friendItem.latitude,
+                            friendItem.longitude
+                        )
+                    ).title("${friendItem.name} ${friendItem.surname}")
                 )
-            )
+            }
         }
     }
 }
